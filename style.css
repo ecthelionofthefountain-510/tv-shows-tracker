@@ -1,0 +1,149 @@
+/* Bakgrund och grundstil */
+body {
+  background-image: url(img/lotr-background.jpg);
+  font-family: 'Friz Quadrata', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to right, #1c1c2b, #243B55);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Header */
+header {
+  background-color: #1C2833;
+  padding: 15px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #F4F6F7;
+}
+
+/* Container */
+.container {
+  max-width: 600px;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-top: 60px;
+  background-color: #2C3E50;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Textfält */
+input {
+  padding: 10px;
+  margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 16px;
+  border: 2px solid #007BFF;
+  border-radius: 5px;
+  outline: none;
+}
+
+/* Knappar */
+button {
+  padding: 10px;
+  margin: 5px 0;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #0cb000;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Lista */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #34495E;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 5px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+li h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #ECF0F1;
+}
+
+li p {
+  margin: 5px 0 0;
+  font-size: 0.9rem;
+  color: #BDC3C7;
+}
+
+li button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  background-color: #ff0000;
+}
+
+li button:hover {
+  background-color: #0056b3;
+}
+
+/* Hantering av sedda serier */
+li.seen {
+  background-color: #2E4053;
+  color: #95A5A6;
+  text-decoration: line-through;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+
+  li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  li button {
+    margin-top: 10px;
+    width: 100%;
+  }
+}
+
+li div {
+  display: flex;
+  align-items: center;
+}
+
+li img {
+  width: 50px;
+  height: 75px;
+  object-fit: cover;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
