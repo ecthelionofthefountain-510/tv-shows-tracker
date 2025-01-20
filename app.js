@@ -1,95 +1,143 @@
-const API_KEY = '5cf01592b6f79d30139010ab67152f30'; // Ersätt med din TMDb API-nyckel
+const API_KEY = '5cf01592b6f79d30139010ab67152f30'; // Din TMDb API-nyckel
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
 // Get elements
-const seriesInput = document.getElementById('seriesInput');
-const addSeriesButton = document.getElementById('addSeriesButton');
-const seriesList = document.getElementById('seriesList');
+const seriesListContainer = document.getElementById('seriesListContainer');
+const watchedSeriesList = document.getElementById('watchedSeriesList');
+const searchInput = document.getElementById('searchInput');
+const searchButton = document.getElementById('searchButton');
 
-// Load saved series
-let series = JSON.parse(localStorage.getItem('series')) || [];
+// Load saved watched series
+let watchedSeries = JSON.parse(localStorage.getItem('watchedSeries')) || [];
 
-function renderSeries() {
-  seriesList.innerHTML = '';
-  series.forEach((item, index) => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <div style="display: flex; align-items: center;">
-        ${item.poster ? `<img src="${item.poster}" alt="${item.name}" style="width: 50px; height: 75px; margin-right: 10px; border-radius: 5px;">` : ''}
-        <h3>${item.name}</h3>
-      </div>
+// Fetch and display popular TV shows
+async function fetchPopularSeries() {
+  try {
+    const response = await fetch(`${TMDB_BASE_URL}/tv/popular?api_key=${API_KEY}&language=en-US&page=1`);
+    const data = await response.json();
+    displaySeries(data.results);
+  } catch (error) {
+    console.error('Failed to fetch popular series:', error);
+  }
+}
+
+// Search for TV shows by query
+async function searchSeries(query) {
+  try {
+    const response = await fetch(`${TMDB_BASE_URL}/search/tv?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=en-US&page=1`);
+    const data = await response.json();
+    displaySeries(data.results); // Show search results
+  } catch (error) {
+    console.error('Failed to search for series:', error);
+  }
+}
+
+function displaySeries(seriesList) {
+  seriesListContainer.innerHTML = ''; // Clear previous content
+  seriesList.forEach((series) => {
+    const div = document.createElement('div');
+    div.classList.add('series-item'); // Lägg till klassen
+
+    // Kontrollera om serien redan är markerad som Watched
+    const isWatched = watchedSeries.some((s) => s.id === series.id);
+
+    div.innerHTML = `
+      <img src="${IMAGE_BASE_URL}${series.poster_path}" alt="${series.name}">
+      <h3>${series.name}</h3>
+      <button class="mark-watched" data-id="${series.id}" style="background-color: ${
+      isWatched ? 'green' : '#007BFF'
+    };">
+        ${isWatched ? 'Watched' : 'Mark as Watched'}
+      </button>
     `;
 
-    const toggleButton = document.createElement('button');
-    toggleButton.textContent = item.seen ? 'Unmark' : 'Mark as Seen';
-    toggleButton.style.backgroundColor = item.seen ? '#ec00e1' : 'black'; // Ändrar färg baserat på "seen"-status
-    toggleButton.style.color = 'white';
-    toggleButton.addEventListener('click', () => {
-      toggleSeen(index); // Uppdatera "seen"-status
-    });
+    const button = div.querySelector('.mark-watched');
+    button.addEventListener('click', () =>
+      toggleWatchStatus(series.id, series.name, series.poster_path, button)
+    );
 
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.addEventListener('click', () => deleteSeries(index));
-
-    li.appendChild(toggleButton);
-    li.appendChild(deleteButton);
-    seriesList.appendChild(li);
+    seriesListContainer.appendChild(div);
   });
 }
 
-// Add a new series with TMDb thumbnail
-async function addSeries() {
-  const seriesName = seriesInput.value.trim();
-  if (seriesName) {
-    const poster = await fetchPoster(seriesName);
-    series.push({ name: seriesName, seen: false, poster });
-    seriesInput.value = '';
-    saveSeries();
-    renderSeries();
+function toggleWatchStatus(id, name, posterPath, button) {
+  const seriesIndex = watchedSeries.findIndex((series) => series.id === id);
+
+  if (seriesIndex !== -1) {
+    // Serien finns i listan: Ta bort den
+    watchedSeries.splice(seriesIndex, 1);
+    saveWatchedSeries();
+    renderWatchedSeries();
+
+    // Uppdatera knappen
+    button.textContent = 'Mark as Watched';
+    button.style.backgroundColor = '#007BFF';
+  } else {
+    // Serien finns inte i listan: Lägg till den
+    watchedSeries.push({ id, name, poster: `${IMAGE_BASE_URL}${posterPath}` });
+    saveWatchedSeries();
+    renderWatchedSeries();
+
+    // Uppdatera knappen
+    button.textContent = 'Watched';
+    button.style.backgroundColor = 'green';
   }
 }
 
-// Fetch poster from TMDb
-async function fetchPoster(seriesName) {
-  try {
-    const response = await fetch(`${TMDB_BASE_URL}/search/tv?api_key=${API_KEY}&query=${encodeURIComponent(seriesName)}&language=en-US`);
-    const data = await response.json();
-    if (data.results && data.results.length > 0) {
-      const posterPath = data.results[0].poster_path; // Get the first result's poster
-      return posterPath ? `${IMAGE_BASE_URL}${posterPath}` : null;
+function renderWatchedSeries() {
+  watchedSeriesList.innerHTML = ''; // Töm listan först
+  watchedSeries.forEach((series, index) => {
+    const li = document.createElement('li');
+    li.classList.add('watched-item');
+    li.innerHTML = `
+    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+      <div style="display: flex; align-items: center;">
+        <img src="${series.poster}" alt="${series.name}" style="width: 50px; height: 75px; margin-right: 10px; border-radius: 5px;">
+        <h3>${series.name}</h3>
+      </div>
+      <button class="remove-button" data-id="${series.id}" style="padding: 5px 10px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Remove</button>
+    </div>
+  `;
+
+    // Lägg till "Remove"-knappens funktion
+    const removeButton = li.querySelector('.remove-button');
+    removeButton.addEventListener('click', () => {
+      removeWatchedSeries(index); // Kalla på funktionen för att ta bort serien
+    });
+
+    watchedSeriesList.appendChild(li);
+  });
+}
+
+function removeWatchedSeries(index) {
+  const removedSeries = watchedSeries[index]; // Hämta serien som tas bort
+  watchedSeries.splice(index, 1); // Ta bort serien från listan
+  saveWatchedSeries(); // Uppdatera localStorage
+  renderWatchedSeries(); // Uppdatera listan
+
+  // Uppdatera motsvarande knapp i "Popular TV Shows"-listan
+  const buttons = document.querySelectorAll('.mark-watched');
+  buttons.forEach((button) => {
+    if (button.dataset.id === String(removedSeries.id)) {
+      button.textContent = 'Mark as Watched';
+      button.style.backgroundColor = '#007BFF';
     }
-  } catch (error) {
-    console.error('Failed to fetch poster:', error);
-  }
-  return null; // Return null if no poster is found
+  });
 }
 
-// Toggle seen status
-function toggleSeen(index) {
-  series[index].seen = !series[index].seen;
-  saveSeries();
-  renderSeries();
-}
-
-// Delete a series
-function deleteSeries(index) {
-  series.splice(index, 1);
-  saveSeries();
-  renderSeries();
-}
-
-// Save series to localStorage
-function saveSeries() {
-  localStorage.setItem('series', JSON.stringify(series));
+function saveWatchedSeries() {
+  localStorage.setItem('watchedSeries', JSON.stringify(watchedSeries));
 }
 
 // Event listeners
-addSeriesButton.addEventListener('click', addSeries);
-seriesInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') addSeries();
+searchButton.addEventListener('click', () => {
+  const query = searchInput.value.trim();
+  if (query) {
+    searchSeries(query); // Perform search
+  }
 });
 
-// Initial render
-renderSeries();
+// Fetch and display popular series on page load
+fetchPopularSeries();
+renderWatchedSeries();
