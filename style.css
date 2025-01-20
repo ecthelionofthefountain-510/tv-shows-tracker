@@ -132,7 +132,7 @@ section {
 #watchedSeriesList {
   max-height: 600px; /* Begränsa höjden på listorna */
   overflow-y: auto; /* Lägg till rullning om innehållet är för långt */
-  background-color: #2C3E50;
+  background-color: #00000084;
   border-radius: 5px;
   padding: 15px;
   height: auto;
@@ -145,13 +145,7 @@ section {
   }
 }
 
-#seriesListContainer {
-  max-height: 600px; /* Samma höjdbegränsning som Watched Series */
-  overflow-y: auto; /* Scrollbar om innehållet blir för långt */
-  background-color: #2C3E50; /* Samma bakgrundsfärg */
-  border-radius: 5px; /* Rundade hörn */
-  padding: 15px; /* Inre marginal för innehåll */
-}
+
 
 .series-item {
   display: flex;
