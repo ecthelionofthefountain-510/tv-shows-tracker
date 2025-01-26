@@ -48,15 +48,16 @@ main {
   animation: zoomIn 1s ease-out;
 }
 
-section.search {
+section.search, section.watched-filter {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* Centrerar innehållet horisontellt */
+  align-items: center;    /* Centrerar innehållet vertikalt */
+  gap: 10px;              /* Avstånd mellan input och knapp */
+  margin-bottom: 30px; 
   margin-bottom: 30px;
-  width: 100%;
 }
 
-input#searchInput {
+input#searchInput, input#watchedFilterInput {
   padding: 10px;
   width: 300px;
   border: 1px solid #000000;
@@ -70,10 +71,10 @@ input#searchInput:focus {
 }
 
 button {
-  background-color: #007BFF;
+  padding: 10px;
+  background-color: #000000;
   color: white;
   border: none;
-  padding: 10px;
   border-radius: 5px;
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.3s ease;
@@ -177,4 +178,12 @@ button.remove-button:hover {
     transform: scale(1);
     opacity: 1;
   }
+}
+
+.watched-filter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  width: 100%;
 }

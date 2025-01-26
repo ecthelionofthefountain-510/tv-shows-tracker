@@ -70,6 +70,7 @@ function toggleWatchStatus(id, name, posterPath, button) {
 }
 
 function renderWatchedSeries() {
+  displayFilteredSeries(watchedSeries);
   watchedSeriesList.innerHTML = ''; // Töm listan först
   watchedSeries.forEach((series, index) => {
     const li = document.createElement('li');
@@ -113,3 +114,77 @@ searchButton.addEventListener('click', () => {
 
 // Render watched series on page load
 renderWatchedSeries();
+
+// Get the filter input
+const watchedFilterInput = document.getElementById('watchedFilterInput');
+
+function filterWatchedSeries() {
+  const query = watchedFilterInput.value.toLowerCase().trim(); // Case-insensitive och utan whitespace
+  const filteredSeries = watchedSeries.filter((series) =>
+    series.name.toLowerCase().includes(query)
+  );
+  displayFilteredSeries(filteredSeries); // Visa endast filtrerade resultat
+}
+
+function displayFilteredSeries(seriesList) {
+  watchedSeriesList.innerHTML = ''; // Töm listan
+  seriesList.forEach((series, index) => {
+    const li = document.createElement('li');
+    li.classList.add('watched-item');
+    li.innerHTML = `
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+        <div style="display: flex; align-items: center;">
+          <img src="${series.poster}" alt="${series.name}" style="width: 50px; height: 75px; margin-right: 10px; border-radius: 5px;">
+          <h3>${series.name}</h3>
+        </div>
+        <button class="remove-button" data-id="${series.id}" style="padding: 5px 10px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Remove</button>
+      </div>
+    `;
+
+    // Ta bort serien från watchedSeries när knappen trycks
+    const removeButton = li.querySelector('.remove-button');
+    removeButton.addEventListener('click', () => {
+      removeWatchedSeries(index);
+    });
+
+    watchedSeriesList.appendChild(li); // Lägg till varje serie i listan
+  });
+}
+
+watchedFilterInput.addEventListener('keypress', (event) => {
+  if (event.key === 'Enter') {
+    filterWatchedSeries(); // Kör filtreringsfunktionen
+  }
+});
+
+// Trigger search when Enter key is pressed
+searchInput.addEventListener('keypress', (event) => {
+  if (event.key === 'Enter') {
+    const query = searchInput.value.trim();
+    if (query) {
+      searchSeries(query); // Perform search
+    }
+  }
+});
+
+// Trigger filter when Enter key is pressed in "Watched Series" search field
+watchedFilterInput.addEventListener('keypress', (event) => {
+  if (event.key === 'Enter') {
+    filterWatchedSeries(); // Perform filtering
+  }
+});
+
+// Existing button click functionality for search
+searchButton.addEventListener('click', () => {
+  const query = searchInput.value.trim();
+  if (query) {
+    searchSeries(query); // Perform search
+  }
+});
+
+const watchedFilterButton = document.getElementById('watchedFilterButton');
+
+// Trigger filter when "Watched Filter" button is clicked
+watchedFilterButton.addEventListener('click', () => {
+  filterWatchedSeries(); // Kör filtreringsfunktionen
+});
