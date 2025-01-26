@@ -11,7 +11,7 @@ body {
 }
 
 header {
-  background-color: #1C2833;
+  background-color: #000000ad;
   color: white;
   padding: 15px;
   width: 100%;
@@ -27,7 +27,7 @@ h1 {
 }
 
 h2 {
-  background-color: rgba(0, 0, 0, 0.7); /* Halvtransparent svart bakgrund */
+  background-color: rgba(0, 0, 0, 0.699); /* Halvtransparent svart bakgrund */
   color: white; /* Vit text */
   padding: 10px 20px; /* Lite extra utrymme runt texten */
   border-radius: 10px; /* Rundade hörn */
@@ -98,7 +98,7 @@ li {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  background-color: #34495E;
+  background-color: #000000eb;
   padding: 10px;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
