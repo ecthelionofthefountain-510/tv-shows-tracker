@@ -70,7 +70,9 @@ function toggleWatchStatus(id, name, posterPath, button) {
 }
 
 function renderWatchedSeries() {
-  displayFilteredSeries(watchedSeries);
+  // Sortera listan innan visning
+  watchedSeries.sort((a, b) => a.name.localeCompare(b.name));
+  
   watchedSeriesList.innerHTML = ''; // Töm listan först
   watchedSeries.forEach((series, index) => {
     const li = document.createElement('li');
@@ -101,8 +103,13 @@ function removeWatchedSeries(index) {
 }
 
 function saveWatchedSeries() {
+  // Sortera watchedSeries i bokstavsordning
+  watchedSeries.sort((a, b) => a.name.localeCompare(b.name));
+
+  // Spara till localStorage
   localStorage.setItem('watchedSeries', JSON.stringify(watchedSeries));
 }
+
 
 // Event listeners
 searchButton.addEventListener('click', () => {
@@ -121,7 +128,7 @@ const watchedFilterInput = document.getElementById('watchedFilterInput');
 function filterWatchedSeries() {
   const query = watchedFilterInput.value.toLowerCase().trim(); // Case-insensitive och utan whitespace
   const filteredSeries = watchedSeries.filter((series) =>
-    series.name.toLowerCase().includes(query)
+    series.name.toLowerCase().startsWith(query) // Använd startsWith istället för includes
   );
   displayFilteredSeries(filteredSeries); // Visa endast filtrerade resultat
 }
