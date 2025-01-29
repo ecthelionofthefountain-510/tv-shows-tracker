@@ -2,27 +2,32 @@ const API_KEY = '5cf01592b6f79d30139010ab67152f30'; // Din TMDb API-nyckel
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
-// Get elements
+// Hämta HTML-element
 const watchedSeriesList = document.getElementById('watchedSeriesList');
 const searchInput = document.getElementById('searchInput');
 const searchButton = document.getElementById('searchButton');
+const watchedFilterInput = document.getElementById('watchedFilterInput');
+const watchedFilterButton = document.getElementById('watchedFilterButton');
 
-// Load saved watched series
+// Ladda sparade serier från localStorage
 let watchedSeries = JSON.parse(localStorage.getItem('watchedSeries')) || [];
 
-// Search for TV shows by query
+// Söka efter TV-serier från TMDb API
 async function searchSeries(query) {
   try {
-    const response = await fetch(`${TMDB_BASE_URL}/search/tv?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=en-US&page=1`);
+    const response = await fetch(
+      `${TMDB_BASE_URL}/search/tv?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=en-US&page=1`
+    );
     const data = await response.json();
-    displaySearchResults(data.results); // Show search results
+    displaySearchResults(data.results);
   } catch (error) {
     console.error('Failed to search for series:', error);
   }
 }
 
+// Visa sökresultat
 function displaySearchResults(seriesList) {
-  watchedSeriesList.innerHTML = ''; // Clear watched series
+  watchedSeriesList.innerHTML = ''; // Rensa listan
   seriesList.forEach((series) => {
     const li = document.createElement('li');
     li.classList.add('watched-item');
@@ -45,34 +50,28 @@ function displaySearchResults(seriesList) {
   });
 }
 
+// Hantera att lägga till/ta bort serier från "Watched Series"
 function toggleWatchStatus(id, name, posterPath, button) {
   const seriesIndex = watchedSeries.findIndex((series) => series.id === id);
 
   if (seriesIndex !== -1) {
-    // Serien finns i listan: Ta bort den
     watchedSeries.splice(seriesIndex, 1);
     saveWatchedSeries();
     renderWatchedSeries();
-
-    // Uppdatera knappen
     button.textContent = 'Add to Watched';
     button.style.backgroundColor = '#007BFF';
   } else {
-    // Serien finns inte i listan: Lägg till den
     watchedSeries.push({ id, name, poster: `${IMAGE_BASE_URL}${posterPath}` });
     saveWatchedSeries();
     renderWatchedSeries();
-
-    // Uppdatera knappen
     button.textContent = 'Watched';
     button.style.backgroundColor = 'green';
   }
 }
 
+// Visa listan över watched series i bokstavsordning
 function renderWatchedSeries() {
-  // Sortera listan innan visning
   watchedSeries.sort((a, b) => a.name.localeCompare(b.name));
-  
   watchedSeriesList.innerHTML = ''; // Töm listan först
   watchedSeries.forEach((series, index) => {
     const li = document.createElement('li');
@@ -96,43 +95,35 @@ function renderWatchedSeries() {
   });
 }
 
+// Ta bort serie från watched list
 function removeWatchedSeries(index) {
   watchedSeries.splice(index, 1);
   saveWatchedSeries();
   renderWatchedSeries();
 }
 
+// Spara watched series till localStorage och sortera
 function saveWatchedSeries() {
-  // Sortera watchedSeries i bokstavsordning
   watchedSeries.sort((a, b) => a.name.localeCompare(b.name));
-
-  // Spara till localStorage
   localStorage.setItem('watchedSeries', JSON.stringify(watchedSeries));
 }
 
-
-// Event listeners
-searchButton.addEventListener('click', () => {
-  const query = searchInput.value.trim();
-  if (query) {
-    searchSeries(query); // Perform search
-  }
-});
-
-// Render watched series on page load
-renderWatchedSeries();
-
-// Get the filter input
-const watchedFilterInput = document.getElementById('watchedFilterInput');
-
+// Filtrera watched series baserat på inmatad text
 function filterWatchedSeries() {
-  const query = watchedFilterInput.value.toLowerCase().trim(); // Case-insensitive och utan whitespace
+  const query = watchedFilterInput.value.toLowerCase().trim();
+  if (query.length === 0) {
+    renderWatchedSeries(); // Visa alla serier om sökfältet är tomt
+    return;
+  }
+
   const filteredSeries = watchedSeries.filter((series) =>
-    series.name.toLowerCase().startsWith(query) // Använd startsWith istället för includes
+    series.name.toLowerCase().startsWith(query) // Endast serier som BÖRJAR med söksträngen
   );
-  displayFilteredSeries(filteredSeries); // Visa endast filtrerade resultat
+
+  displayFilteredSeries(filteredSeries);
 }
 
+// Visa filtrerade watched series
 function displayFilteredSeries(seriesList) {
   watchedSeriesList.innerHTML = ''; // Töm listan
   seriesList.forEach((series, index) => {
@@ -148,50 +139,27 @@ function displayFilteredSeries(seriesList) {
       </div>
     `;
 
-    // Ta bort serien från watchedSeries när knappen trycks
     const removeButton = li.querySelector('.remove-button');
     removeButton.addEventListener('click', () => {
       removeWatchedSeries(index);
     });
 
-    watchedSeriesList.appendChild(li); // Lägg till varje serie i listan
+    watchedSeriesList.appendChild(li);
   });
 }
 
-watchedFilterInput.addEventListener('keypress', (event) => {
-  if (event.key === 'Enter') {
-    filterWatchedSeries(); // Kör filtreringsfunktionen
-  }
-});
-
-// Trigger search when Enter key is pressed
-searchInput.addEventListener('keypress', (event) => {
-  if (event.key === 'Enter') {
-    const query = searchInput.value.trim();
-    if (query) {
-      searchSeries(query); // Perform search
-    }
-  }
-});
-
-// Trigger filter when Enter key is pressed in "Watched Series" search field
-watchedFilterInput.addEventListener('keypress', (event) => {
-  if (event.key === 'Enter') {
-    filterWatchedSeries(); // Perform filtering
-  }
-});
-
-// Existing button click functionality for search
-searchButton.addEventListener('click', () => {
+// Lyssna på input-förändringar och sök direkt
+searchInput.addEventListener('input', () => {
   const query = searchInput.value.trim();
-  if (query) {
-    searchSeries(query); // Perform search
+  if (query.length > 0) {
+    searchSeries(query);
   }
 });
 
-const watchedFilterButton = document.getElementById('watchedFilterButton');
-
-// Trigger filter when "Watched Filter" button is clicked
-watchedFilterButton.addEventListener('click', () => {
-  filterWatchedSeries(); // Kör filtreringsfunktionen
+// Lyssna på input-förändringar och filtrera watched series direkt
+watchedFilterInput.addEventListener('input', () => {
+  filterWatchedSeries();
 });
+
+// Render watched series på sidladdning
+renderWatchedSeries();
