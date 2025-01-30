@@ -151,7 +151,7 @@ function displayFilteredSeries(seriesList) {
 
 function showResults() {
   const searchInputRect = searchInput.getBoundingClientRect();
-  searchResults.style.top = `${searchInputRect.bottom + window.scrollY}px`; // Placera under sökfältet
+  searchResults.style.top = `${searchInputRect.bottom + window.scrollY}px`;
   searchResults.classList.remove('hidden');
 }
 
