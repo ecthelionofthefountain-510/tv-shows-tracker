@@ -233,21 +233,21 @@ li:hover {
   }
 
   .search-results {
-    position: fixed;
-    top: 150px;
+    position: fixed; /* Fixera sektionen */
+    top: 100px; /* Anpassa detta till din layout */
     left: 0;
     right: 0;
     margin: auto;
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(0, 0, 0, 0.9); /* Lite mörkare bakgrund */
     color: white;
     padding: 15px;
-    border-radius: 10px;  
-    max-height: 400px;
+    border-radius: 10px;
+    max-height: 50vh; /* Begränsa höjden */
     max-width: 600px;
-    overflow-y: auto;
+    overflow-y: auto; /* Scrolla om innehållet är långt */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 999;
-  }
+}
   
   .hidden {
     display: none;

@@ -149,8 +149,9 @@ function displayFilteredSeries(seriesList) {
   });
 }
 
-// Funktioner för att visa/dölja resultatsektionen
 function showResults() {
+  const searchInputRect = searchInput.getBoundingClientRect();
+  searchResults.style.top = `${searchInputRect.bottom + window.scrollY}px`; // Placera under sökfältet
   searchResults.classList.remove('hidden');
 }
 
@@ -194,3 +195,6 @@ document.addEventListener('click', (event) => {
     hideResults();
   }
 });
+
+document.body.style.overflow = 'hidden'; // Lås scrollning när sökresultaten visas
+document.body.style.overflow = 'auto'; // Tillåt scrollning igen
