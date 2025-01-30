@@ -163,3 +163,24 @@ watchedFilterInput.addEventListener('input', () => {
 
 // Render watched series på sidladdning
 renderWatchedSeries();
+
+document.addEventListener('touchmove', (e) => {
+  if (window.scrollY === 0 && e.touches[0].clientY > 100) {
+    renderWatchedSeries(); // Laddar om listan
+  }
+});
+
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.onresult = (event) => {
+  const query = event.results[0][0].transcript;
+  searchInput.value = query;
+  searchSeries(query);
+};
+
+document.getElementById('voiceSearchButton').addEventListener('click', () => {
+  recognition.start();
+});
+
+searchInput.addEventListener('focus', () => {
+  searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
