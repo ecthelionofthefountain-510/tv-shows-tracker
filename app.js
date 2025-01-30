@@ -5,9 +5,10 @@ const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 // Hämta HTML-element
 const watchedSeriesList = document.getElementById('watchedSeriesList');
 const searchInput = document.getElementById('searchInput');
-const searchButton = document.getElementById('searchButton');
 const watchedFilterInput = document.getElementById('watchedFilterInput');
-const watchedFilterButton = document.getElementById('watchedFilterButton');
+const searchResults = document.getElementById('searchResults');
+const resultsList = document.getElementById('resultsList');
+const closeResultsButton = document.getElementById('closeResultsButton');
 
 // Ladda sparade serier från localStorage
 let watchedSeries = JSON.parse(localStorage.getItem('watchedSeries')) || [];
@@ -20,33 +21,33 @@ async function searchSeries(query) {
     );
     const data = await response.json();
     displaySearchResults(data.results);
+    showResults(); // Visa resultatsektionen
   } catch (error) {
     console.error('Failed to search for series:', error);
   }
 }
 
-// Visa sökresultat
 function displaySearchResults(seriesList) {
-  watchedSeriesList.innerHTML = ''; // Rensa listan
+  resultsList.innerHTML = ''; // Rensa listan
   seriesList.forEach((series) => {
+    const isWatched = watchedSeries.some((watched) => watched.id === series.id);
     const li = document.createElement('li');
-    li.classList.add('watched-item');
     li.innerHTML = `
       <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
         <div style="display: flex; align-items: center;">
-          <img src="${IMAGE_BASE_URL}${series.poster_path}" alt="${series.name}" style="width: 50px; height: 75px; margin-right: 10px; border-radius: 5px;">
+          <img src="${IMAGE_BASE_URL}${series.poster_path}" alt="${series.name}" style="width: 50px; height: 75px; margin-right: 10px;">
           <h3>${series.name}</h3>
         </div>
-        <button class="mark-watched" data-id="${series.id}" style="padding: 5px 10px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">Add to Watched</button>
+        <button class="toggle-watched-button" data-id="${series.id}" style="padding: 5px 10px; background-color: ${isWatched ? 'green' : '#007BFF'}; color: white; border: none; border-radius: 5px; cursor: pointer;">
+          ${isWatched ? 'Watched' : 'Add to Watched'}
+        </button>
       </div>
     `;
 
-    const button = li.querySelector('.mark-watched');
-    button.addEventListener('click', () =>
-      toggleWatchStatus(series.id, series.name, series.poster_path, button)
-    );
+    const button = li.querySelector('.toggle-watched-button');
+    button.addEventListener('click', () => toggleWatchStatus(series.id, series.name, series.poster_path, button));
 
-    watchedSeriesList.appendChild(li);
+    resultsList.appendChild(li);
   });
 }
 
@@ -148,6 +149,15 @@ function displayFilteredSeries(seriesList) {
   });
 }
 
+// Funktioner för att visa/dölja resultatsektionen
+function showResults() {
+  searchResults.classList.remove('hidden');
+}
+
+function hideResults() {
+  searchResults.classList.add('hidden');
+}
+
 // Lyssna på input-förändringar och sök direkt
 searchInput.addEventListener('input', () => {
   const query = searchInput.value.trim();
@@ -164,12 +174,10 @@ watchedFilterInput.addEventListener('input', () => {
 // Render watched series på sidladdning
 renderWatchedSeries();
 
-document.addEventListener('touchmove', (e) => {
-  if (window.scrollY === 0 && e.touches[0].clientY > 100) {
-    renderWatchedSeries(); // Laddar om listan
-  }
-});
+// Stäng sökresultaten när man klickar på "X"-knappen
+closeResultsButton.addEventListener('click', hideResults);
 
+// Stöd för röststyrd sökning
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.onresult = (event) => {
   const query = event.results[0][0].transcript;
@@ -177,10 +185,12 @@ recognition.onresult = (event) => {
   searchSeries(query);
 };
 
-document.getElementById('voiceSearchButton').addEventListener('click', () => {
-  recognition.start();
-});
-
 searchInput.addEventListener('focus', () => {
   searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
+document.addEventListener('click', (event) => {
+  if (!searchResults.contains(event.target) && event.target !== searchInput) {
+    hideResults();
+  }
 });

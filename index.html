@@ -12,17 +12,21 @@
     <h1>Series Tracker</h1>
   </header>
   <main>
+    <section id="searchResults" class="search-results hidden">
+  <div class="search-header">
+    <button id="closeResultsButton" class="close-results-button">X</button>
+  </div>
+  <ul id="resultsList"></ul>
+</section>
     <section class="search">
       <div style="margin-bottom: 20px;">
-        <input type="text" id="searchInput" placeholder="Leta ette serier ... " style="padding: 10px; width: 300px; border: 1px solid #000000; border-radius: 5px;">
-        <button id="searchButton" style="padding: 10px; background-color: #00731b; color: white; border: none; border-radius: 5px; cursor: pointer;">Search</button>
+        <input type="text" id="searchInput" placeholder="search shows" style="padding: 10px; width: 300px; border: 1px solid #000000; border-radius: 5px;">
       </div>
     </section>
     <div class="container">
     <section>
       <section class="watched-filter">
-        <input type="text" id="watchedFilterInput" placeholder="Har jag sett dinne tro? ..." style="padding: 10px; width: 300px; border: 1px solid #000000; border-radius: 5px;">
-        <button id="watchedFilterButton" style="padding: 10px; background-color: #00731b; color: white; border: none; border-radius: 5px; cursor: pointer;">Search</button>
+        <input type="text" id="watchedFilterInput" placeholder="watched shows" style="padding: 10px; width: 300px; border: 1px solid #000000; border-radius: 5px;">
       </section>
       <ul id="watchedSeriesList"></ul>
     </div>
