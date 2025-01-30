@@ -30,24 +30,19 @@ async function searchSeries(query) {
 function displaySearchResults(seriesList) {
   resultsList.innerHTML = ''; // Rensa listan
   seriesList.forEach((series) => {
-    const isWatched = watchedSeries.some((watched) => watched.id === series.id);
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-        <div style="display: flex; align-items: center;">
-          <img src="${IMAGE_BASE_URL}${series.poster_path}" alt="${series.name}" style="width: 50px; height: 75px; margin-right: 10px;">
+      const isWatched = watchedSeries.some((watched) => watched.id === series.id);
+      const li = document.createElement('li');
+      li.innerHTML = `
+          <img src="${IMAGE_BASE_URL}${series.poster_path}" alt="${series.name}">
           <h3>${series.name}</h3>
-        </div>
-        <button class="toggle-watched-button" data-id="${series.id}" style="padding: 5px 10px; background-color: ${isWatched ? 'green' : '#007BFF'}; color: white; border: none; border-radius: 5px; cursor: pointer;">
-          ${isWatched ? 'Watched' : 'Add to Watched'}
-        </button>
-      </div>
-    `;
+          <button class="toggle-watched-button" style="background-color: ${isWatched ? 'green' : '#007BFF'};">
+              ${isWatched ? 'Watched' : 'Add to Watched'}
+          </button>
+      `;
 
-    const button = li.querySelector('.toggle-watched-button');
-    button.addEventListener('click', () => toggleWatchStatus(series.id, series.name, series.poster_path, button));
-
-    resultsList.appendChild(li);
+      const button = li.querySelector('.toggle-watched-button');
+      button.addEventListener('click', () => toggleWatchStatus(series.id, series.name, series.poster_path, button));
+      resultsList.appendChild(li);
   });
 }
 
