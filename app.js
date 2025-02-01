@@ -12,43 +12,55 @@ const resultsList = document.getElementById('resultsList');
 // Ladda sparade serier från localStorage
 let watchedSeries = JSON.parse(localStorage.getItem('watchedSeries')) || [];
 
-// Söka efter TV-serier från TMDb API
-async function searchSeries(query) {
+// Söka efter filmer och serier från TMDb API
+async function searchMedia(query) {
   try {
     const response = await fetch(
-      `${TMDB_BASE_URL}/search/tv?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=en-US&page=1`
+      `${TMDB_BASE_URL}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=en-US&page=1`
     );
     const data = await response.json();
     displaySearchResults(data.results);
     showResults(); // Visa resultatsektionen
   } catch (error) {
-    console.error('Failed to search for series:', error);
+    console.error('Failed to search for media:', error);
   }
 }
 
-function displaySearchResults(seriesList) {
+function displaySearchResults(results) {
   resultsList.innerHTML = '';
-  seriesList.forEach((series) => {
-    const isWatched = watchedSeries.some((watched) => watched.id === series.id);
-    
+
+  results.forEach((item) => {
+    const isWatched = watchedSeries.some((watched) => watched.id === item.id);
+
     const li = document.createElement('li');
     li.classList.add('searched-item');
 
-    // Lägg till 'watched-button' om serien redan är watched
+    // Kontrollera om objektet är en film eller serie
+    const name = item.title || item.name;
+
+    // Lägg till 'watched-button' om objektet redan är i watched-listan
     const buttonClass = isWatched ? 'toggle-watched-button watched-button' : 'toggle-watched-button';
     const buttonText = isWatched ? 'Watched' : 'Add to Watched';
 
     li.innerHTML = `
-      <img src="${IMAGE_BASE_URL}${series.poster_path}" alt="${series.name}">
-      <h3>${series.name}</h3>
+      <img src="${IMAGE_BASE_URL}${item.poster_path}" alt="${name}">
+      <h3>${name}</h3>
       <button class="${buttonClass}">${buttonText}</button>
     `;
 
     const button = li.querySelector('.toggle-watched-button');
-    button.addEventListener('click', () => toggleWatchStatus(series.id, series.name, series.poster_path, button));
+    button.addEventListener('click', () => toggleWatchStatus(item.id, name, item.poster_path, button));
     resultsList.appendChild(li);
   });
 }
+
+// Lyssna på input-förändringar och sök direkt
+searchInput.addEventListener('input', () => {
+  const query = searchInput.value.trim();
+  if (query.length > 0) {
+    searchMedia(query);  // Använd den nya searchMedia-funktionen
+  }
+});
 
 function toggleWatchStatus(id, name, posterPath, button) {
   const seriesIndex = watchedSeries.findIndex((series) => series.id === id);
