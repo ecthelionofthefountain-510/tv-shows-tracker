@@ -132,7 +132,7 @@ li.searched-item {
   align-items: center;
   gap: 10px;
   background-color: rgba(0, 0, 0, 0.9);
-  padding: 12px 15px;
+  padding: 2px 4px;
   margin: 10px 0;
   border: 3px solid green;
   border-radius: 10px;
@@ -171,13 +171,11 @@ li.searched-item button {
 
 li.searched-item button:hover {
   background-color: #0056b3;
-  transform: scale(1.
-
-05);
+  transform: scale(1);
 }
 
 li.searched-item:hover {
-  transform: scale(1.02);
+  transform: scale(1);
   background-color: rgba(50, 50, 50, 0.9);
 }
 
@@ -233,6 +231,15 @@ li.watched-item button:hover {
 li.watched-item:hover {
   transform: scale(1.02);
   background-color: rgba(50, 50, 50, 0.9);
+}
+
+li.watched-item button.remove-button {
+  background-color: red !important;
+}
+
+li.watched-item button.remove-button:hover {
+  background-color: darkred !important;
+  transform: scale(1.05);
 }
 
 @media (max-width: 768px) {
@@ -307,20 +314,6 @@ ul::-webkit-scrollbar {
   display: none;
 }
 
-.close-results-button {
-  padding: 10px;
-  font-size: 1.2rem;
-  background-color: #E74C3C;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.close-results-button:hover {
-  background-color: #C0392B;
-}
-
 /* Animationer */
 @keyframes fadeIn {
   from {
@@ -354,8 +347,8 @@ ul::-webkit-scrollbar {
 }
 
 button.remove-button {
-  grid-column: 3;           /* Placera knappen i den tredje kolumnen */
-  justify-self: end;        /* Flytta knappen längst till höger */
+  grid-column: 3;
+  justify-self: end;
   padding: 8px 12px;
   font-size: 0.9rem;
   color: white;
@@ -383,4 +376,9 @@ button.remove-button:hover {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.searched-item button.watched-button {
+  background-color: green !important;
+  color: white;
 }

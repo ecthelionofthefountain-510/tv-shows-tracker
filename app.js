@@ -8,7 +8,6 @@ const searchInput = document.getElementById('searchInput');
 const watchedFilterInput = document.getElementById('watchedFilterInput');
 const searchResults = document.getElementById('searchResults');
 const resultsList = document.getElementById('resultsList');
-const closeResultsButton = document.getElementById('closeResultsButton');
 
 // Ladda sparade serier från localStorage
 let watchedSeries = JSON.parse(localStorage.getItem('watchedSeries')) || [];
@@ -28,15 +27,21 @@ async function searchSeries(query) {
 }
 
 function displaySearchResults(seriesList) {
-  resultsList.innerHTML = ''; // Töm listan
+  resultsList.innerHTML = '';
   seriesList.forEach((series) => {
     const isWatched = watchedSeries.some((watched) => watched.id === series.id);
+    
     const li = document.createElement('li');
-    li.classList.add('searched-item');  // Ny klass för sökresultat
+    li.classList.add('searched-item');
+
+    // Lägg till 'watched-button' om serien redan är watched
+    const buttonClass = isWatched ? 'toggle-watched-button watched-button' : 'toggle-watched-button';
+    const buttonText = isWatched ? 'Watched' : 'Add to Watched';
+
     li.innerHTML = `
       <img src="${IMAGE_BASE_URL}${series.poster_path}" alt="${series.name}">
       <h3>${series.name}</h3>
-      <button class="toggle-watched-button">${isWatched ? 'Watched' : 'Add to Watched'}</button>
+      <button class="${buttonClass}">${buttonText}</button>
     `;
 
     const button = li.querySelector('.toggle-watched-button');
@@ -45,36 +50,36 @@ function displaySearchResults(seriesList) {
   });
 }
 
-// Hantera att lägga till/ta bort serier från "Watched Series"
 function toggleWatchStatus(id, name, posterPath, button) {
   const seriesIndex = watchedSeries.findIndex((series) => series.id === id);
 
   if (seriesIndex !== -1) {
+    // Om serien redan finns i watched list, ta bort den
     watchedSeries.splice(seriesIndex, 1);
     saveWatchedSeries();
     renderWatchedSeries();
     button.textContent = 'Add to Watched';
-    button.style.backgroundColor = '#007BFF';
+    button.classList.remove('watched-button');
   } else {
+    // Lägg till serien i watched list
     watchedSeries.push({ id, name, poster: `${IMAGE_BASE_URL}${posterPath}` });
     saveWatchedSeries();
     renderWatchedSeries();
     button.textContent = 'Watched';
-    button.style.backgroundColor = 'green';
+    button.classList.add('watched-button');
   }
 }
 
-// Visa listan över watched series i bokstavsordning
 function renderWatchedSeries() {
   watchedSeries.sort((a, b) => a.name.localeCompare(b.name));
-  watchedSeriesList.innerHTML = ''; // Töm listan först
+  watchedSeriesList.innerHTML = '';
   watchedSeries.forEach((series, index) => {
     const li = document.createElement('li');
     li.classList.add('watched-item');
     li.innerHTML = `
-    <img src="${series.poster}" alt="${series.name}">
-    <h3>${series.name}</h3>
-    <button class="remove-button" data-id="${series.id}">Remove</button>
+      <img src="${series.poster}" alt="${series.name}">
+      <h3>${series.name}</h3>
+      <button class="remove-button" data-id="${series.id}">Remove</button>
     `;
 
     const removeButton = li.querySelector('.remove-button');
@@ -114,20 +119,15 @@ function filterWatchedSeries() {
   displayFilteredSeries(filteredSeries);
 }
 
-// Visa filtrerade watched series
 function displayFilteredSeries(seriesList) {
-  watchedSeriesList.innerHTML = ''; // Töm listan
+  watchedSeriesList.innerHTML = '';
   seriesList.forEach((series, index) => {
     const li = document.createElement('li');
     li.classList.add('watched-item');
     li.innerHTML = `
-      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-        <div style="display: flex; align-items: center;">
-          <img src="${series.poster}" alt="${series.name}" style="width: 50px; height: 75px; margin-right: 10px; border-radius: 5px;">
-          <h3>${series.name}</h3>
-        </div>
-        <button class="remove-button-step-two" data-id="${series.id}">Remove</button>
-      </div>
+      <img src="${series.poster}" alt="${series.name}">
+      <h3>${series.name}</h3>
+      <button class="remove-button-step-two" data-id="${series.id}">Remove</button>
     `;
 
     const removeButtonStepTwo = li.querySelector('.remove-button-step-two');
@@ -171,8 +171,6 @@ watchedFilterInput.addEventListener('input', () => {
 // Render watched series på sidladdning
 renderWatchedSeries();
 
-// Stäng sökresultaten när man klickar på "X"-knappen
-closeResultsButton.addEventListener('click', hideResults);
 
 // Stöd för röststyrd sökning
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
