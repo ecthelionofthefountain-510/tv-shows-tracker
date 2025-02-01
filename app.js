@@ -1,4 +1,4 @@
-const API_KEY = '5cf01592b6f79d30139010ab67152f30'; // Din TMDb API-nyckel
+const API_KEY = '558e543e6cc18ea7707d040ea08a0533'; // Din TMDb API-nyckel
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
@@ -28,21 +28,20 @@ async function searchSeries(query) {
 }
 
 function displaySearchResults(seriesList) {
-  resultsList.innerHTML = ''; // Rensa listan
+  resultsList.innerHTML = ''; // Töm listan
   seriesList.forEach((series) => {
-      const isWatched = watchedSeries.some((watched) => watched.id === series.id);
-      const li = document.createElement('li');
-      li.innerHTML = `
-          <img src="${IMAGE_BASE_URL}${series.poster_path}" alt="${series.name}">
-          <h3>${series.name}</h3>
-          <button class="toggle-watched-button" style="background-color: ${isWatched ? 'green' : '#007BFF'};">
-              ${isWatched ? 'Watched' : 'Add to Watched'}
-          </button>
-      `;
+    const isWatched = watchedSeries.some((watched) => watched.id === series.id);
+    const li = document.createElement('li');
+    li.classList.add('searched-item');  // Ny klass för sökresultat
+    li.innerHTML = `
+      <img src="${IMAGE_BASE_URL}${series.poster_path}" alt="${series.name}">
+      <h3>${series.name}</h3>
+      <button class="toggle-watched-button">${isWatched ? 'Watched' : 'Add to Watched'}</button>
+    `;
 
-      const button = li.querySelector('.toggle-watched-button');
-      button.addEventListener('click', () => toggleWatchStatus(series.id, series.name, series.poster_path, button));
-      resultsList.appendChild(li);
+    const button = li.querySelector('.toggle-watched-button');
+    button.addEventListener('click', () => toggleWatchStatus(series.id, series.name, series.poster_path, button));
+    resultsList.appendChild(li);
   });
 }
 
@@ -73,13 +72,9 @@ function renderWatchedSeries() {
     const li = document.createElement('li');
     li.classList.add('watched-item');
     li.innerHTML = `
-      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-        <div style="display: flex; align-items: center;">
-          <img src="${series.poster}" alt="${series.name}" style="width: 50px; height: 75px; margin-right: 10px; border-radius: 5px;">
-          <h3>${series.name}</h3>
-        </div>
-        <button class="remove-button" data-id="${series.id}" style="padding: 5px 10px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Remove</button>
-      </div>
+    <img src="${series.poster}" alt="${series.name}">
+    <h3>${series.name}</h3>
+    <button class="remove-button" data-id="${series.id}">Remove</button>
     `;
 
     const removeButton = li.querySelector('.remove-button');
@@ -131,12 +126,12 @@ function displayFilteredSeries(seriesList) {
           <img src="${series.poster}" alt="${series.name}" style="width: 50px; height: 75px; margin-right: 10px; border-radius: 5px;">
           <h3>${series.name}</h3>
         </div>
-        <button class="remove-button" data-id="${series.id}" style="padding: 5px 10px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Remove</button>
+        <button class="remove-button-step-two" data-id="${series.id}">Remove</button>
       </div>
     `;
 
-    const removeButton = li.querySelector('.remove-button');
-    removeButton.addEventListener('click', () => {
+    const removeButtonStepTwo = li.querySelector('.remove-button-step-two');
+    removeButtonStepTwo.addEventListener('click', () => {
       removeWatchedSeries(index);
     });
 
@@ -146,12 +141,18 @@ function displayFilteredSeries(seriesList) {
 
 function showResults() {
   const searchInputRect = searchInput.getBoundingClientRect();
-  searchResults.style.top = `${searchInputRect.bottom + window.scrollY}px`;
+  searchResults.style.top = `${searchInputRect.bottom + 10}px`;
   searchResults.classList.remove('hidden');
+
+  // Döljer "watched series"-listan
+  watchedSeriesList.style.display = 'none';
 }
 
 function hideResults() {
   searchResults.classList.add('hidden');
+
+  // Visar "watched series"-listan igen
+  watchedSeriesList.style.display = 'block';
 }
 
 // Lyssna på input-förändringar och sök direkt

@@ -1,306 +1,386 @@
-  body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-image: url(img/background-ai.jpg);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    animation: fadeIn 1.5s ease-in-out;
-  }
-
-  header {
-    background-color: #000000ad;
-    color: white;
-    padding: 15px;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    animation: slideDown 1.5s ease-out;
-  }
-
-  h1 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2.5rem;
-    margin: 0;
-  }
-
-  h2 {
-    background-color: rgba(0, 0, 0, 0.699); /* Halvtransparent svart bakgrund */
-    color: white; /* Vit text */
-    padding: 10px 20px; /* Lite extra utrymme runt texten */
-    border-radius: 10px; /* Rundade hörn */
-    text-align: center; /* Centrerad text */
-    display: flex; /* Gör rubriken till en låda */
-    justify-content: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Lägg till en skugga */
-    font-size: 1.5rem; /* Gör texten lite större */
-    margin: 20px auto; /* Centrerar rubriken i sin sektion */
-    font-family: 'Orbitron', sans-serif; /* Samma font som rubriken */
-  }
-
-  main {
-    max-width: 800px;
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    animation: zoomIn 1s ease-out;
-  }
-
-  section.search, section.watched-filter {
-    display: flex;
-    justify-content: center; /* Centrerar innehållet horisontellt */
-    align-items: center;    /* Centrerar innehållet vertikalt */
-    gap: 10px;              /* Avstånd mellan input och knapp */
-    margin-bottom: 30px; 
-    margin-bottom: 30px;
-    position: sticky;
-    z-index: 10;
-  }
-
-  input#searchInput, input#watchedFilterInput {
-    padding: 10px;
-    width: 300px;
-    border: 1px solid #000000;
-    border-radius: 5px;
-    transition: box-shadow 0.3s ease-in-out;
-  }
-
-  input#searchInput:focus {
-    box-shadow: 0 0 10px #007BFF;
-    outline: none;
-  }
-
-  button {
-    padding: 12px;
-    background-color: #000000;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.2s ease, background-color 0.3s ease;
-    font-size: 1rem;
-  }
-
-  button:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-  }
-
-  button:active {
-    transform: scale(0.95);
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  li {
-    display: flex;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 12px 15px;
-    margin: 10px 0;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-li:hover {
-    transform: scale(1.02);
-    background-color: rgba(50, 50, 50, 0.9);
-}
-
-li img {
-    width: 60px;
-    height: 90px;
-    object-fit: cover;
-    margin-right: 15px;
-    border-radius: 5px;
-}
-
-li h3 {
-    font-size: 1.2rem;
-    color: white;
-    margin: 0;
-    flex: 1;
-}
-
-.series-item img {
-  width: 80px;
-  height: 120px;
-  object-fit: cover;
-  margin-right: 15px;
-  border-radius: 5px;
-}
-
-.series-item h3 {
-  font-size: 1.2rem;
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-image: url(img/background-ai.jpg);
   color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+header {
+  background-color: #000000ad;
+  color: white;
+  padding: 15px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: slideDown 1.5s ease-out;
+}
+
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
   margin: 0;
 }
 
-  .series-item img:hover {
-    transform: scale(1.1);
+main {
+  max-width: 800px;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  animation: zoomIn 1s ease-out;
+}
+
+section.search, section.watched-filter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  position: sticky;
+  z-index: 10;
+  max-width: 800px;
+  width: 100%;
+
+}
+
+input#searchInput, input#watchedFilterInput {
+  padding: 10px;
+  width: 300px;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+input#searchInput:focus {
+  box-shadow: 0 0 10px #007BFF;
+  outline: none;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-width: 800px;
+  width: 100%;
+}
+
+ul::-webkit-scrollbar {
+  display: none;                 /* Dölj scrollbar i WebKit-baserade webbläsare (Chrome, Safari, etc.) */
+}
+
+li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 12px 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+li img {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+li h3 {
+  font-size: 1.2rem;
+  color: white;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  align-self: center; /* Säkerställer att texten centreras vertikalt */
+}
+
+li button {
+  justify-self: end; /* Flyttar knappen längst till höger i grid-layouten */
+  grid-column: 3;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: white;
+  background-color: #007BFF;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+li button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+li:hover {
+  transform: scale(1.02);
+  background-color: rgba(50, 50, 50, 0.9);
+}
+
+
+li.searched-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(0, 0, 0, 0.9);
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 3px solid green;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+li.searched-item img {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+li.searched-item h3 {
+  font-size: 1.2rem;
+  color: white;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  align-self: center;
+}
+
+li.searched-item button {
+  justify-self: end;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: white;
+  background-color: #007BFF;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+li.searched-item button:hover {
+  background-color: #0056b3;
+  transform: scale(1.
+
+05);
+}
+
+li.searched-item:hover {
+  transform: scale(1.02);
+  background-color: rgba(50, 50, 50, 0.9);
+}
+
+/* Grid-design för listobjekt */
+li.watched-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 1px solid rgb(255, 0, 212);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+li.watched-item img {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+li.watched-item h3 {
+  font-size: 1.2rem;
+  color: white;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  align-self: center; /* Centrera texten vertikalt */
+}
+
+li.watched-item button {
+  justify-self: end;   /* Placera knappen längst till höger */
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: white;
+  background-color: #007BFF;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+li.watched-item button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+li.watched-item:hover {
+  transform: scale(1.02);
+  background-color: rgba(50, 50, 50, 0.9);
+}
+
+@media (max-width: 768px) {
+  li.watched-item img {
+    width: 60px;
+    height: 90px;
+  }
+}
+
+@media (max-width: 480px) {
+  li.watched-item img {
+    width: 50px;
+    height: 75px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  li {
+      grid-template-columns: auto 1fr auto;
   }
 
-  button.remove-button {
-    background-color: #E74C3C;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    padding: 10px 15px;
+  li img {
+      width: 60px;
+      height: 90px;
+  }
+}
+
+@media (max-width: 480px) {
+  li {
+      grid-template-columns: auto 1fr auto; /* Behåll grid-layouten */
   }
 
-  button.remove-button:hover {
-    background-color: #C0392B;
-    transform: scale(1.05);
+  li img {
+      width: 50px;
+      height: 75px;
   }
+}
 
-  @media (max-width: 768px) {
-    .container {
-      flex-direction: column;
-    }
+.search-results {
+  position: fixed;
+  top: 120px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  color: white;
+  border-radius: 10px;
+  max-height: 70vh;
+  max-width: 800px;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+  transform: translateY(-10px);
+}
 
-    section {
-      width: 100%;
-    }
-  }
+.search-results:not(.hidden) {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-  @keyframes fadeIn {
-    from {
+.search-results::-webkit-scrollbar {
+  display: none;                 /* Dölj scrollbar i WebKit-baserade webbläsare (Chrome, Safari, etc.) */
+}
+
+ul::-webkit-scrollbar {
+  display: none;                 /* Dölj scrollbar i WebKit-baserade webbläsare (Chrome, Safari, etc.) */
+}
+
+.hidden {
+  display: none;
+}
+
+.close-results-button {
+  padding: 10px;
+  font-size: 1.2rem;
+  background-color: #E74C3C;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.close-results-button:hover {
+  background-color: #C0392B;
+}
+
+/* Animationer */
+@keyframes fadeIn {
+  from {
       opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
   }
+  to {
+      opacity: 1;
+  }
+}
 
-  @keyframes slideDown {
-    from {
+@keyframes slideDown {
+  from {
       transform: translateY(-100%);
       opacity: 0;
-    }
-    to {
+  }
+  to {
       transform: translateY(0);
       opacity: 1;
-    }
   }
+}
 
-  @keyframes zoomIn {
-    from {
+@keyframes zoomIn {
+  from {
       transform: scale(0.8);
       opacity: 0;
-    }
-    to {
+  }
+  to {
       transform: scale(1);
       opacity: 1;
-    }
   }
-
-  .watched-filter {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 30px;
-    width: 100%;
-
-  }
-
-  @media (max-width: 480px) {
-    li {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .series-item img {
-      width: 80px;
-      height: 120px;
-    }
-  }
-
-  .full-screen-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.95);
-    color: white;
-    z-index: 100;
-    display: none;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .full-screen-modal.active {
-    display: flex;
-  }
-
-  .fade-in {
-    animation: fadeIn 0.5s ease;
-  }
-  
-  .fade-out {
-    animation: fadeOut 0.5s ease forwards;
-  }
-
-  .search-results {
-    position: fixed;
-    top: 100px;
-    left: 0;
-    right: 0;
-    margin: auto;
-    background-color: rgba(0, 0, 0, 0.9);
-    color: white;
-    padding: 15px;
-    border-radius: 10px;
-    max-height: 60vh;
-    max-width: 90%;
-    overflow-y: auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 999;
-}
-  
-  .hidden {
-    display: none;
-  }
-  
-  .search-header {
-    display: flex;
-    justify-content: flex-end;
-    padding: 10px;
-  }
-  
-  .close-results-button {
-    padding: 10px;
-    font-size: 1.2rem;
-    background-color: #E74C3C;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .close-results-button:hover {
-    background-color: #C0392B;
-  }
-
-  button.toggle-watched-button {
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    color: white;
-    background-color: #007BFF;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button.toggle-watched-button:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
+button.remove-button {
+  grid-column: 3;           /* Placera knappen i den tredje kolumnen */
+  justify-self: end;        /* Flytta knappen längst till höger */
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: white;
+  background-color: red;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button.toggle-watched-button:active {
-    transform: scale(0.95);
+button.remove-button:hover {
+  background-color: darkred;
+  transform: scale(1.05);
+}
+
+
+.remove-button-step-two {
+  grid-column: 3;           /* Placera knappen i den tredje kolumnen */
+  justify-self: end;        /* Flytta knappen längst till höger */
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: white;
+  background-color: red;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
