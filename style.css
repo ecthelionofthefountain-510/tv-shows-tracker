@@ -242,6 +242,16 @@ li.watched-item button.remove-button:hover {
   transform: scale(1.05);
 }
 
+button.remove-button, 
+button.remove-button-step-two {
+  background-color: red !important;
+}
+
+button.remove-button:hover,
+button.remove-button-step-two:hover {
+  background-color: darkred !important;
+}
+
 @media (max-width: 768px) {
   li.watched-item img {
     width: 60px;
