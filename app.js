@@ -9,76 +9,64 @@ const watchedFilterInput = document.getElementById('watchedFilterInput');
 const searchResults = document.getElementById('searchResults');
 const resultsList = document.getElementById('resultsList');
 
+
 // Ladda sparade serier från localStorage
 let watchedSeries = JSON.parse(localStorage.getItem('watchedSeries')) || [];
 
-// Söka efter filmer och serier från TMDb API
-async function searchMedia(query) {
+// Söka efter TV-serier från TMDb API
+async function searchSeries(query) {
   try {
     const response = await fetch(
-      `${TMDB_BASE_URL}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=en-US&page=1`
+      `${TMDB_BASE_URL}/search/tv?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=en-US&page=1`
     );
     const data = await response.json();
     displaySearchResults(data.results);
     showResults(); // Visa resultatsektionen
   } catch (error) {
-    console.error('Failed to search for media:', error);
+    console.error('Failed to search for series:', error);
   }
 }
 
-function displaySearchResults(results) {
+function displaySearchResults(seriesList) {
   resultsList.innerHTML = '';
-
-  results.forEach((item) => {
-    const isWatched = watchedSeries.some((watched) => watched.id === item.id);
-
+  seriesList.forEach((series) => {
+    const isWatched = watchedSeries.some((watched) => watched.id === series.id);
+    
     const li = document.createElement('li');
     li.classList.add('searched-item');
 
-    // Kontrollera om objektet är en film eller serie
-    const name = item.title || item.name;
-
-    // Lägg till 'watched-button' om objektet redan är i watched-listan
+    // Lägg till 'watched-button' om serien redan är watched
     const buttonClass = isWatched ? 'toggle-watched-button watched-button' : 'toggle-watched-button';
     const buttonText = isWatched ? 'Watched' : 'Add to Watched';
 
     li.innerHTML = `
-      <img src="${IMAGE_BASE_URL}${item.poster_path}" alt="${name}">
-      <h3>${name}</h3>
+      <img src="${IMAGE_BASE_URL}${series.poster_path}" alt="${series.name}">
+      <h3>${series.name}</h3>
       <button class="${buttonClass}">${buttonText}</button>
     `;
 
     const button = li.querySelector('.toggle-watched-button');
-    button.addEventListener('click', () => toggleWatchStatus(item.id, name, item.poster_path, button));
+    button.addEventListener('click', () => toggleWatchStatus(series.id, series.name, series.poster_path, button));
     resultsList.appendChild(li);
   });
 }
 
-// Lyssna på input-förändringar och sök direkt
-searchInput.addEventListener('input', () => {
-  const query = searchInput.value.trim();
-  if (query.length > 0) {
-    searchMedia(query);  // Använd den nya searchMedia-funktionen
-  }
-});
-
+// Hantera att lägga till/ta bort serier från "Watched Series"
 function toggleWatchStatus(id, name, posterPath, button) {
   const seriesIndex = watchedSeries.findIndex((series) => series.id === id);
 
   if (seriesIndex !== -1) {
-    // Om serien redan finns i watched list, ta bort den
     watchedSeries.splice(seriesIndex, 1);
     saveWatchedSeries();
     renderWatchedSeries();
     button.textContent = 'Add to Watched';
-    button.classList.remove('watched-button');
+    button.style.backgroundColor = '#007BFF';
   } else {
-    // Lägg till serien i watched list
     watchedSeries.push({ id, name, poster: `${IMAGE_BASE_URL}${posterPath}` });
     saveWatchedSeries();
     renderWatchedSeries();
     button.textContent = 'Watched';
-    button.classList.add('watched-button');
+    button.style.backgroundColor = 'green';
   }
 }
 
@@ -139,11 +127,11 @@ function displayFilteredSeries(seriesList) {
     li.innerHTML = `
       <img src="${series.poster}" alt="${series.name}">
       <h3>${series.name}</h3>
-      <button class="remove-button-step-two" data-id="${series.id}">Remove</button>
+      <button class="remove-button" data-id="${series.id}">Remove</button>
     `;
 
-    const removeButtonStepTwo = li.querySelector('.remove-button-step-two');
-    removeButtonStepTwo.addEventListener('click', () => {
+    const removeButton = li.querySelector('.remove-button');
+    removeButton.addEventListener('click', () => {
       removeWatchedSeries(index);
     });
 
@@ -182,6 +170,7 @@ watchedFilterInput.addEventListener('input', () => {
 
 // Render watched series på sidladdning
 renderWatchedSeries();
+
 
 
 // Stöd för röststyrd sökning

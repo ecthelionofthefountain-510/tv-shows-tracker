@@ -145,6 +145,8 @@ li.searched-item img {
   height: 120px;
   object-fit: cover;
   border-radius: 5px;
+  margin-left: 10px;
+  padding: 5px;
 }
 
 li.searched-item h3 {
@@ -391,4 +393,18 @@ button.remove-button:hover {
 .searched-item button.watched-button {
   background-color: green !important;
   color: white;
+}
+
+button.toggle-watched-button {
+  margin-right: 10px;
+}
+
+button.remove-button, 
+button.remove-button-step-two {
+  background-color: red !important;
+}
+
+button.remove-button:hover,
+button.remove-button-step-two:hover {
+  background-color: darkred !important;
 }
